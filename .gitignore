@@ -6,6 +6,6 @@ test_out
 tmp
 .DS_Store
 .idea
-.idea/
+.idea/*
 .log
 .zip
