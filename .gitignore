@@ -27,5 +27,6 @@ bin-release/
 *.diff
 *.patch
 *.tmp
+*.lock
 
 /node_modules
