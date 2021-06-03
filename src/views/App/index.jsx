@@ -22,7 +22,7 @@ class App extends React.Component {
     render() {
         return (
             <div className='app'>
-                <Button type="primary">按钮测试</Button>
+                <Button type="primary">按钮</Button>
                 <Link  to="/test">测试页面</Link>
                 <br/>
                 <div>redux & redux-saga测试</div>
