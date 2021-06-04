@@ -2,29 +2,12 @@
  *封装axios 方便使用 增加接口防抖处理 是否显示loading 是否使用公共错误提示
  * */
 import axios from 'axios'
-import { ElLoading,ElMessage } from 'element-plus'
-const loading = { //loading加载对象
-    loadingInstance: null,
-    //打开加载
-    open(){
-        if(this.loadingInstance===null){ // 如果实例 为空，则创建
-            this.loadingInstance=ElLoading.service({
-                text:'加载中...', //加载图标下的文字
-                spinner: 'el-icon-loading', //加载图标
-                background:'rgba(0, 0, 0, 0.5)', //背景色
-                customClass:'loading' //自定义样式的类名
-            })
-        }
-    },
-    //关闭加载
-    close(){
-        // 不为空时, 则关闭加载窗口
-        if(this.loadingInstance !== null) {
-            this.loadingInstance.close()
-        }
-        this.loadingInstance = null
-    }
-}
+import React from "react";
+import ReactDOM from 'react-dom';
+import { message,Spin } from 'antd'
+import store from '../store'
+import { OPENPAGELOADING, CLOSEPAGELOADING } from '../actions'
+
 
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
@@ -34,6 +17,27 @@ else if (process.env.NODE_ENV == 'debug') {
 }
 else if (process.env.NODE_ENV == 'production') {
     axios.defaults.baseURL = 'https://www.production.com';
+}
+// 当前正在请求的数量
+let requestCount = 0
+
+// 显示loading
+function showLoading () {
+    if (requestCount === 0) {
+        let dom = document.createElement('div')
+        dom.setAttribute('id', 'loading')
+        document.body.appendChild(dom)
+        ReactDOM.render(<Spin tip="加载中..." size="large"/>, dom)
+    }
+    requestCount++
+}
+
+// 隐藏loading
+function hideLoading () {
+    requestCount--
+    if (requestCount === 0) {
+        document.body.removeChild(document.getElementById('loading'))
+    }
 }
 
 axios.defaults.timeout = 10000;
@@ -82,11 +86,11 @@ export const request = (data,showError = true,Loading = true)=>{
         return Promise.reject(error)
     })
     if (Loading){
-        loading.open() //打开加载窗口
+        showLoading() //打开加载窗口
     }
     return http(data).then(response=>{
         if (Loading){
-            loading.close() //关闭加载窗口
+            hideLoading() //关闭加载窗口
         }
         //成功的返回
         if(response.status===200){ //状态码
@@ -97,22 +101,14 @@ export const request = (data,showError = true,Loading = true)=>{
                     break
                 default:
                     if (showError){
-                        ElMessage({
-                            message: '接口异常',//这里可以根据后段接口优化成具体错误信息
-                            type:'error',
-                            duration:5000
-                        })
+                        message.warning('接口异常')//这里可以根据后段接口优化成具体错误信息
                     }
                     return Promise.resolve(response.data)
             }
 
         }else{
             //错误提示
-            ElMessage({
-                message: '接口异常',//这里可以根据后段接口优化成具体错误信息
-                type:'error',
-                duration:5000
-            })
+            message.warning('接口异常')//这里可以根据后段接口优化成具体错误信息
         }
     })
 

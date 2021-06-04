@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { increment } from '../../actions/index';
 import { Link } from "react-router-dom";
 
 class Test extends React.Component{
@@ -8,7 +7,7 @@ class Test extends React.Component{
         super(props);
     }
     onClick(){
-        console.log(this.props.number)
+        console.log(this.props)
     }
     render() {
         return(

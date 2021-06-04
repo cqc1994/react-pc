@@ -85,7 +85,12 @@ module.exports = {
         }),
         // 配置路径访问快捷键 @/xxx
         addWebpackAlias({
-            '@': resolve('src'),
+            "@": path.resolve(__dirname, "./src"),
+            "@api": path.resolve(__dirname, "./src/api"),
+            "@assets": path.resolve(__dirname, "./src/assets"),
+            "@components": path.resolve(__dirname, "./src/components"),
+            "@utils": path.resolve(__dirname, "./src/utils"),
+            "@views": path.resolve(__dirname, "./src/views"),
         }),
         // postCss 自动将px转为rem 需要配合 lib-flexible 使用
         // addPostcssPlugins([
